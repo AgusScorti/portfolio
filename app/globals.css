@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800;900&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  --bg: #EEF2F9;
+  --bg-card: #F5F8FE;
+  --bg-card2: #EAEEF8;
+  --border: #D4DCF0;
+  --border-soft: #E2E8F4;
+  --accent: #6B5CE7;
+  --accent2: #3BBFCE;
+  --accent-light: #EDE9FD;
+  --text-primary: #1A1F3A;
+  --text-secondary: #4A5280;
+  --text-muted: #8A93B8;
+  --green: #27AE7A;
+  --green-bg: #E6F7F1;
+  --orange: #D4860A;
+  --orange-bg: #FDF3E0;
+  --purple: #7C6EF0;
+  --purple-bg: #F0EDFB;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
