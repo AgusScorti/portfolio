@@ -1,158 +1,287 @@
 "use client";
-const skills = {
-  "Frontend": ["React", "Next.js 15", "TypeScript", "Tailwind CSS"],
-  "Backend": [".NET / C#", "REST APIs", "Node.js"],
-  "Database": ["PostgreSQL", "Supabase", "SQL Server", "Prisma ORM"],
-  "Tools": ["Docker", "Git", "Azure DevOps", "Power BI"],
-};
+import { useState, useEffect, useRef } from "react";
 
-const experience = [
+const skills = [
   {
-    role: "Software Developer",
-    company: "Banco de la Provincia de Buenos Aires",
-    period: "Nov 2025 – Present",
-    desc: "Building APIs and web apps connecting modern platforms with legacy core banking systems.",
+    category: "Frontend",
+    items: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+    gradient: "linear-gradient(135deg, #6B5CE7 0%, #3BBFCE 100%)",
   },
   {
-    role: "QA Analyst",
-    company: "Banco de la Provincia de Buenos Aires",
-    period: "Jul 2021 – Oct 2025",
-    desc: "Manual testing for web and mobile banking platforms used by thousands of daily users.",
+    category: "Backend",
+    items: [".NET / C#", "REST APIs", "Node.js"],
+    gradient: "linear-gradient(135deg, #3BBFCE 0%, #27AE7A 100%)",
+  },
+  {
+    category: "Database",
+    items: ["PostgreSQL", "Supabase", "SQL Server", "Prisma ORM"],
+    gradient: "linear-gradient(135deg, #7C6EF0 0%, #6B5CE7 100%)",
+  },
+  {
+    category: "Tools",
+    items: ["Docker", "Git", "Azure DevOps", "Power BI"],
+    gradient: "linear-gradient(135deg, #D4860A 0%, #E8A020 100%)",
   },
 ];
 
-const certs = ["ISTQB® CTFL v4.0", "Data Engineer", "Power BI Specialization", "Data Analysis with Python"];
+const certs = [
+  "ISTQB® CTFL v4.0",
+  "Data Engineer",
+  "Power BI Specialization",
+  "Data Analysis with Python",
+];
+
+const STYLES = `
+  @keyframes fadeUpIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes cardFloat {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(-6px); }
+  }
+
+  .about-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 100px 40px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    border-top: 1px solid var(--border-soft);
+  }
+
+  .about-visible .anim { animation: fadeUpIn 0.65s ease both; }
+  .anim { opacity: 0; }
+
+  /* Flip card grid */
+  .flip-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin: 36px 0 44px;
+  }
+  .flip-wrap {
+    perspective: 1000px;
+    cursor: pointer;
+    height: 250px;
+  }
+  .flip-wrap:hover .flip-front {
+    box-shadow: 0 12px 40px rgba(107,92,231,0.18);
+    transform: translateY(-4px) scale(1.02);
+  }
+  .flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .flip-wrap.flipped .flip-inner {
+    transform: rotateY(180deg);
+  }
+  .flip-front, .flip-back {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .flip-front {
+    background: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .flip-back {
+    transform: rotateY(180deg);
+    padding: 22px 20px;
+    justify-content: flex-start;
+  }
+
+  /* Certs as chips */
+  .cert-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cert-chip {
+    transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  }
+  .cert-chip-0:hover { background: linear-gradient(135deg, #6B5CE7, #3BBFCE); border-color: transparent; color: #fff; }
+  .cert-chip-1:hover { background: linear-gradient(135deg, #3BBFCE, #27AE7A); border-color: transparent; color: #fff; }
+  .cert-chip-2:hover { background: linear-gradient(135deg, #7C6EF0, #6B5CE7); border-color: transparent; color: #fff; }
+  .cert-chip-3:hover { background: linear-gradient(135deg, #D4860A, #E8A020); border-color: transparent; color: #fff; }
+
+  @media (max-width: 640px) {
+    .about-section {
+      min-height: 100svh;
+      padding: 90px 24px 60px;
+    }
+    .flip-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 28px 0 36px;
+    }
+    .flip-wrap { height: 200px; }
+    .flip-wrap:hover .flip-front {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+`;
 
 export default function About() {
+  const [flipped, setFlipped] = useState<number | null>(null);
+  const [visible, setVisible] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.12 }
+    );
+    if (ref.current) observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id="about"
-      style={{
-        padding: "80px 40px",
-        maxWidth: 1100,
-        margin: "0 auto",
-        borderTop: "1px solid var(--border-soft)",
-      }}
+      className={`about-section${visible ? " about-visible" : ""}`}
+      ref={ref}
     >
-      <p style={{ fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: "2px", color: "var(--accent)", marginBottom: 8, textTransform: "uppercase" }}>
-        About
-      </p>
-      <h2 style={{ fontFamily: "'Syne', sans-serif", fontSize: 36, fontWeight: 700, color: "var(--text-primary)", letterSpacing: "-1px", marginBottom: 48 }}>
-        A bit about me.
-      </h2>
+      <style>{STYLES}</style>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48 }}>
-        {/* Left col */}
-        <div>
-          <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.8, fontWeight: 300, marginBottom: 24 }}>
-            Systems Engineer from <strong style={{ fontWeight: 500, color: "var(--text-primary)" }}>UTN La Plata</strong> (GPA 8.42). Currently
-            working as Software Developer at{" "}
-            <strong style={{ fontWeight: 500, color: "var(--text-primary)" }}>Banco de la Provincia de Buenos Aires</strong>, building APIs and web
-            applications that bridge modern platforms with legacy core banking systems.
-          </p>
-          <p style={{ fontSize: 15, color: "var(--text-secondary)", lineHeight: 1.8, fontWeight: 300, marginBottom: 32 }}>
-            I enjoy solving real problems with clean code — whether it&apos;s a full-stack web app, a REST API, or an automated billing system. Fluent in{" "}
-            <strong style={{ fontWeight: 500, color: "var(--text-primary)" }}>English</strong> (advanced oral and written).
-          </p>
+      {/* Header */}
+      <div>
+        <p
+          className="anim"
+          style={{ animationDelay: "0.05s", fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: "2px", color: "var(--accent)", marginBottom: 10, textTransform: "uppercase" }}
+        >
+          // about
+        </p>
 
-          {/* Experience */}
-          <div>
-            {experience.map((e, i) => (
-              <div
-                key={i}
-                style={{
-                  padding: "16px 0",
-                  borderBottom: i < experience.length - 1 ? "1px solid var(--border-soft)" : "none",
-                }}
-              >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: 4 }}>
-                  <span style={{ fontSize: 14, fontWeight: 500, color: "var(--text-primary)" }}>{e.role}</span>
-                  <span style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: "var(--text-muted)", letterSpacing: "0.5px" }}>
-                    {e.period}
-                  </span>
-                </div>
-                <div style={{ fontSize: 12, color: "var(--accent)", marginBottom: 4, fontFamily: "'DM Mono', monospace" }}>{e.company}</div>
-                <div style={{ fontSize: 13, color: "var(--text-muted)", lineHeight: 1.6, fontWeight: 300 }}>{e.desc}</div>
-              </div>
-            ))}
-          </div>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 24, flexWrap: "wrap" }}>
+          <h2
+            className="anim"
+            style={{ animationDelay: "0.15s", fontFamily: "'Nunito', sans-serif", fontSize: "clamp(36px, 5vw, 54px)", fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1, margin: 0 }}
+          >
+            What I do<span style={{ color: "var(--accent)" }}>.</span>
+          </h2>
+          <span
+            className="anim"
+            style={{ animationDelay: "0.22s", fontFamily: "'Nunito', sans-serif", fontSize: 15, color: "var(--text-muted)", fontWeight: 500 }}
+          >
+            4+ years building things
+          </span>
         </div>
+      </div>
 
-        {/* Right col */}
-        <div>
-          {/* Skills grid */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 32 }}>
-            {Object.entries(skills).map(([category, items]) => (
-              <div
-                key={category}
-                style={{
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-soft)",
-                  borderRadius: 10,
-                  padding: "16px",
-                }}
-              >
-                <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: "var(--accent2)", letterSpacing: "1px", textTransform: "uppercase", marginBottom: 10 }}>
+      {/* Flip cards */}
+      <div className="flip-grid">
+        {skills.map(({ category, items, gradient }, i) => (
+          <div
+            key={category}
+            className={`flip-wrap anim${flipped === i ? " flipped" : ""}`}
+            style={{ animationDelay: `${0.25 + i * 0.09}s` }}
+            onClick={() => setFlipped(flipped === i ? null : i)}
+          >
+            <div className="flip-inner">
+              {/* Front */}
+              <div className="flip-front">
+                <div style={{
+                  width: 40,
+                  height: 4,
+                  borderRadius: 2,
+                  background: gradient,
+                  marginBottom: 8,
+                }} />
+                <span style={{
+                  fontFamily: "'Nunito', sans-serif",
+                  fontSize: 20,
+                  fontWeight: 800,
+                  color: "var(--text-primary)",
+                  textAlign: "center",
+                }}>
+                  {category}
+                </span>
+                <span style={{
+                  fontFamily: "'Nunito', sans-serif",
+                  fontSize: 12,
+                  color: "var(--text-muted)",
+                  fontWeight: 500,
+                }}>
+                  {items.length} skills
+                </span>
+              </div>
+
+              {/* Back */}
+              <div className="flip-back" style={{ background: gradient }}>
+                <div style={{
+                  fontFamily: "'DM Mono', monospace",
+                  fontSize: 9,
+                  color: "rgba(255,255,255,0.6)",
+                  letterSpacing: "1.5px",
+                  textTransform: "uppercase",
+                  marginBottom: 14,
+                }}>
                   {category}
                 </div>
                 {items.map((s) => (
-                  <div key={s} style={{ fontSize: 13, color: "var(--text-secondary)", marginBottom: 4, fontWeight: 300 }}>
+                  <div key={s} style={{
+                    fontFamily: "'Nunito', sans-serif",
+                    fontSize: 15,
+                    fontWeight: 700,
+                    color: "#fff",
+                    marginBottom: 7,
+                  }}>
                     {s}
                   </div>
                 ))}
               </div>
-            ))}
-          </div>
-
-          {/* Stats */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, marginBottom: 24 }}>
-            {[
-              { num: "4+", label: "Years exp." },
-              { num: "8.42", label: "GPA UTN" },
-              { num: "3", label: "Live projects" },
-            ].map((s) => (
-              <div
-                key={s.label}
-                style={{
-                  background: "var(--bg-card2)",
-                  border: "1px solid var(--border)",
-                  borderRadius: 10,
-                  padding: "14px",
-                  textAlign: "center",
-                }}
-              >
-                <div style={{ fontFamily: "'Syne', sans-serif", fontSize: 26, fontWeight: 800, color: "var(--accent)", lineHeight: 1 }}>
-                  {s.num}
-                </div>
-                <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>{s.label}</div>
-              </div>
-            ))}
-          </div>
-
-          {/* Certs */}
-          <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-soft)", borderRadius: 10, padding: 16 }}>
-            <div style={{ fontFamily: "'DM Mono', monospace", fontSize: 10, color: "var(--accent2)", letterSpacing: "1px", textTransform: "uppercase", marginBottom: 12 }}>
-              Certifications
-            </div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-              {certs.map((c) => (
-                <span
-                  key={c}
-                  style={{
-                    fontSize: 12,
-                    background: "var(--accent-light)",
-                    color: "var(--accent)",
-                    border: "1px solid #D4CCF8",
-                    borderRadius: 5,
-                    padding: "4px 10px",
-                    fontWeight: 400,
-                  }}
-                >
-                  {c}
-                </span>
-              ))}
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Certifications */}
+      <div
+        className="anim"
+        style={{ animationDelay: "0.65s" }}
+      >
+        <p style={{
+          fontFamily: "'DM Mono', monospace",
+          fontSize: 10,
+          color: "var(--accent2)",
+          letterSpacing: "1.5px",
+          textTransform: "uppercase",
+          marginBottom: 16,
+        }}>
+          Certifications
+        </p>
+        <div className="cert-list">
+          {certs.map((c, i) => (
+            <span key={c} className={`cert-chip cert-chip-${i}`} style={{
+              fontFamily: "'Nunito', sans-serif",
+              fontSize: 13,
+              fontWeight: 600,
+              color: "var(--text-secondary)",
+              background: "var(--bg-card)",
+              border: "1.5px solid var(--border)",
+              borderRadius: 999,
+              padding: "7px 16px",
+              display: "inline-block",
+              cursor: "default",
+            }}>
+              {c}
+            </span>
+          ))}
         </div>
       </div>
     </section>
