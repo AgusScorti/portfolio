@@ -77,17 +77,14 @@ const STYLES = `
       justify-content: center;
     }
 
-    /* Group 1: slightly down, full size, transparent */
     .hgroup1 {
       top: 8%;
-      transform: scale(1);
-      opacity: 0.45;
+      transform: scale(0.6);
+      opacity: 0.5;
     }
-
-    /* Group 2: reposition lower so it doesn't overlap content */
     .hgroup2 {
-      top: 72%;
-      transform: scale(0.85);
+      top: 68%;
+      transform: scale(0.55);
       opacity: 0.5;
     }
   }
