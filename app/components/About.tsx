@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const skills = [
   {
@@ -137,6 +138,7 @@ const STYLES = `
 `;
 
 export default function About() {
+  const { t } = useLanguage();
   const [flipped, setFlipped] = useState<number | null>(null);
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLElement>(null);
@@ -164,7 +166,7 @@ export default function About() {
           className="anim"
           style={{ animationDelay: "0.05s", fontFamily: "'DM Mono', monospace", fontSize: 11, letterSpacing: "2px", color: "var(--accent)", marginBottom: 10, textTransform: "uppercase" }}
         >
-          // about
+          {t.about.tag}
         </p>
 
         <div style={{ display: "flex", alignItems: "baseline", gap: 24, flexWrap: "wrap" }}>
@@ -172,13 +174,13 @@ export default function About() {
             className="anim"
             style={{ animationDelay: "0.15s", fontFamily: "'Nunito', sans-serif", fontSize: "clamp(36px, 5vw, 54px)", fontWeight: 800, color: "var(--text-primary)", lineHeight: 1.1, margin: 0 }}
           >
-            What I do<span style={{ color: "var(--accent)" }}>.</span>
+            {t.about.heading.replace(".", "")}<span style={{ color: "var(--accent)" }}>.</span>
           </h2>
           <span
             className="anim"
             style={{ animationDelay: "0.22s", fontFamily: "'Nunito', sans-serif", fontSize: 15, color: "var(--text-muted)", fontWeight: 500 }}
           >
-            4+ years building things
+            {t.about.sub}
           </span>
         </div>
       </div>
@@ -217,7 +219,7 @@ export default function About() {
                   color: "var(--text-muted)",
                   fontWeight: 500,
                 }}>
-                  {items.length} skills
+                  {items.length} {t.about.skillsSuffix}
                 </span>
               </div>
 
@@ -263,7 +265,7 @@ export default function About() {
           textTransform: "uppercase",
           marginBottom: 16,
         }}>
-          Certifications
+          {t.about.certsLabel}
         </p>
         <div className="cert-list">
           {certs.map((c, i) => (

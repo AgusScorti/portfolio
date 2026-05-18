@@ -1,14 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-
-const services = [
-  "Full-stack web apps",
-  "Next.js development",
-  "REST API development",
-  "Database design",
-  "Supabase integration",
-  "Admin panel / CMS",
-];
+import { useLanguage } from "../context/LanguageContext";
 
 const STYLES = `
   @keyframes fadeUpIn {
@@ -111,6 +103,7 @@ const STYLES = `
 `;
 
 export default function Fiverr() {
+  const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
@@ -140,7 +133,7 @@ export default function Fiverr() {
         marginBottom: 10,
         textTransform: "uppercase",
       }}>
-        // freelance
+        {t.fiverr.tag}
       </p>
 
       <h2 className="anim-f" style={{
@@ -152,7 +145,7 @@ export default function Fiverr() {
         lineHeight: 1.1,
         margin: 0,
       }}>
-        Hire me on Fiverr<span style={{ color: "#1DBF73" }}>.</span>
+        {t.fiverr.heading.replace(".", "")}<span style={{ color: "#1DBF73" }}>.</span>
       </h2>
 
       <div className="fiverr-card anim-f" style={{ animationDelay: "0.25s" }}>
@@ -179,10 +172,11 @@ export default function Fiverr() {
             maxWidth: 440,
             marginBottom: 28,
           }}>
-            Need a reliable developer for your next project?{" "}
-            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>Clean code</strong>,{" "}
-            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>clear communication</strong> and{" "}
-            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>fast delivery</strong> — every time.
+            {t.fiverr.body.pre}{" "}
+            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>{t.fiverr.body.bold1}</strong>,{" "}
+            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>{t.fiverr.body.bold2}</strong> and{" "}
+            <strong style={{ fontWeight: 700, color: "var(--text-primary)" }}>{t.fiverr.body.bold3}</strong>{" "}
+            {t.fiverr.body.post}
           </p>
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
@@ -192,10 +186,10 @@ export default function Fiverr() {
               rel="noopener noreferrer"
               className="fiverr-btn-primary"
             >
-              View my profile ↗
+              {t.fiverr.viewProfile}
             </a>
             <a href="#contact" className="fiverr-btn-secondary">
-              Contact directly
+              {t.fiverr.contactDirect}
             </a>
           </div>
         </div>
@@ -210,9 +204,9 @@ export default function Fiverr() {
             textTransform: "uppercase",
             marginBottom: 18,
           }}>
-            Services
+            {t.fiverr.servicesLabel}
           </div>
-          {services.map((s, i) => (
+          {t.fiverr.services.map((s, i) => (
             <div key={s} className="service-item">
               <div style={{
                 width: 6,

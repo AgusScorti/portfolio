@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
 const contacts = [
   {
@@ -154,6 +155,7 @@ const STYLES = `
 `;
 
 export default function Contact() {
+  const { t } = useLanguage();
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLElement>(null);
@@ -174,7 +176,7 @@ export default function Contact() {
   };
 
   const handleWhatsApp = () => {
-    const text = encodeURIComponent(`Hi Agustín! I'm ${form.name} (${form.email}).\n\n${form.message}`);
+    const text = encodeURIComponent(`${t.contact.waGreeting(form.name, form.email)}\n\n${form.message}`);
     window.open(`https://wa.me/5491136860485?text=${text}`, "_blank");
   };
 
@@ -195,7 +197,7 @@ export default function Contact() {
         marginBottom: 10,
         textTransform: "uppercase",
       }}>
-        // contact
+        {t.contact.tag}
       </p>
 
       <h2 className="anim-c" style={{
@@ -207,7 +209,7 @@ export default function Contact() {
         lineHeight: 1.1,
         margin: 0,
       }}>
-        Let&apos;s build something<span style={{ color: "var(--accent)" }}>.</span>
+        {t.contact.heading.replace(".", "")}<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
 
       <div className="contact-grid">
@@ -223,14 +225,14 @@ export default function Contact() {
               display: "block",
               marginBottom: 8,
             }}>
-              Name
+              {t.contact.nameLbl}
             </label>
             <input
               className="contact-input"
               type="text"
               value={form.name}
               onChange={(e) => setForm({ ...form, name: e.target.value })}
-              placeholder="Your name"
+              placeholder={t.contact.namePh}
             />
           </div>
 
@@ -244,14 +246,14 @@ export default function Contact() {
               display: "block",
               marginBottom: 8,
             }}>
-              Email
+              {t.contact.emailLbl}
             </label>
             <input
               className="contact-input"
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              placeholder="your@email.com"
+              placeholder={t.contact.emailPh}
             />
           </div>
 
@@ -265,13 +267,13 @@ export default function Contact() {
               display: "block",
               marginBottom: 8,
             }}>
-              Message
+              {t.contact.msgLbl}
             </label>
             <textarea
               className="contact-input"
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
-              placeholder="Tell me about your project..."
+              placeholder={t.contact.msgPh}
               rows={5}
               style={{ resize: "vertical" }}
             />
@@ -279,10 +281,10 @@ export default function Contact() {
 
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
             <button className="btn-primary" onClick={handleEmail}>
-              Send via email ↗
+              {t.contact.sendEmail}
             </button>
             <button className="btn-whatsapp" onClick={handleWhatsApp}>
-              WhatsApp ↗
+              {t.contact.whatsapp}
             </button>
           </div>
 
@@ -293,7 +295,7 @@ export default function Contact() {
             fontWeight: 400,
             marginTop: -4,
           }}>
-            Opens your email client or WhatsApp pre-filled.
+            {t.contact.hint}
           </p>
         </div>
 
@@ -307,7 +309,7 @@ export default function Contact() {
             lineHeight: 1.7,
             marginBottom: 8,
           }}>
-            Prefer reaching out directly? Pick whichever works best for you.
+            {t.contact.subtext}
           </p>
 
           {contacts.map((c) => (

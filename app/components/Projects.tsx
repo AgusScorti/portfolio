@@ -1,49 +1,33 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "../context/LanguageContext";
 
-const projects = [
+const projectsMeta = [
   {
-    name: "CaluContable",
     status: "live" as const,
     url: "https://www.calucontable.com.ar/",
-    description:
-      "Full-stack platform for accounting firms — landing page, admin panel, video section, resources and Calendly scheduling. All manageable without code.",
     tags: ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "Tailwind"],
     gradient: "linear-gradient(135deg, #6B5CE7 0%, #3BBFCE 100%)",
   },
   {
-    name: "MarcaYa",
     status: "live" as const,
     url: "https://www.marcaya.cl/",
-    description:
-      "Chilean platform that simplifies trademark registration with INAPI using AI. Real trademark search, Claude AI for classification, PDF generation and live payments.",
     tags: ["Next.js", "Supabase", "Claude AI", "Mercado Pago"],
     gradient: "linear-gradient(135deg, #3BBFCE 0%, #27AE7A 100%)",
   },
   {
-    name: "GirasolesEti",
     status: "private" as const,
     url: null,
-    description:
-      "Billing management app for a healthcare center. Automatic invoice matching — when a payment arrives, it finds the provider and calculates every combination matching the exact amount.",
     tags: ["Next.js", "Prisma ORM", "PostgreSQL", "Supabase", "Zod"],
     gradient: "linear-gradient(135deg, #7C6EF0 0%, #6B5CE7 100%)",
   },
   {
-    name: "New project",
     status: "wip" as const,
     url: null,
-    description: "Something new is in the works. Stay tuned.",
     tags: ["Next.js", "Supabase"],
     gradient: "linear-gradient(135deg, #D4860A 0%, #E8A020 100%)",
   },
 ];
-
-const statusConfig = {
-  live:    { label: "Live",        bg: "var(--green-bg)",  color: "var(--green)",  border: "#B8E8D4" },
-  private: { label: "Private",     bg: "var(--orange-bg)", color: "var(--orange)", border: "#F0D8A0" },
-  wip:     { label: "In progress", bg: "var(--purple-bg)", color: "var(--purple)", border: "#D4CCF8" },
-};
 
 const STYLES = `
   @keyframes fadeUpIn {
@@ -118,8 +102,20 @@ const STYLES = `
 `;
 
 export default function Projects() {
+  const { t } = useLanguage();
   const [visible, setVisible] = useState(false);
   const ref = useRef<HTMLElement>(null);
+
+  const projects = projectsMeta.map((meta, i) => ({
+    ...meta,
+    ...t.projects.data[i],
+  }));
+
+  const statusConfig = {
+    live:    { label: t.projects.status.live,    bg: "var(--green-bg)",  color: "var(--green)",  border: "#B8E8D4" },
+    private: { label: t.projects.status.private, bg: "var(--orange-bg)", color: "var(--orange)", border: "#F0D8A0" },
+    wip:     { label: t.projects.status.wip,     bg: "var(--purple-bg)", color: "var(--purple)", border: "#D4CCF8" },
+  };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -147,7 +143,7 @@ export default function Projects() {
         marginBottom: 10,
         textTransform: "uppercase",
       }}>
-        // work
+        {t.projects.tag}
       </p>
 
       <h2 className="anim-p" style={{
@@ -159,7 +155,7 @@ export default function Projects() {
         lineHeight: 1.1,
         margin: 0,
       }}>
-        Things I&apos;ve built<span style={{ color: "var(--accent)" }}>.</span>
+        {t.projects.heading.replace(".", "")}<span style={{ color: "var(--accent)" }}>.</span>
       </h2>
 
       <div className="projects-grid">
@@ -253,7 +249,7 @@ export default function Projects() {
                   onMouseEnter={(e) => ((e.currentTarget as HTMLElement).style.opacity = "0.75")}
                   onMouseLeave={(e) => ((e.currentTarget as HTMLElement).style.opacity = "1")}
                 >
-                  View live site ↗
+                  {t.projects.viewSite}
                 </a>
               )}
             </div>

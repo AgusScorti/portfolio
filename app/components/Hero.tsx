@@ -1,5 +1,6 @@
 "use client";
 import useTypewriter from "./useTypewriter";
+import { useLanguage } from "../context/LanguageContext";
 
 const STYLES = `
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
@@ -91,7 +92,8 @@ const STYLES = `
 `;
 
 export default function Hero() {
-  const typed = useTypewriter();
+  const { t } = useLanguage();
+  const typed = useTypewriter(t.hero.typeWords);
 
   return (
     <section id="hero" className="hero-section">
@@ -207,7 +209,7 @@ export default function Hero() {
           animation: "fadeUp 0.6s ease both 0.1s",
         }}
       >
-        // available for freelance
+        {t.hero.tag}
       </p>
 
       <h1
@@ -220,7 +222,7 @@ export default function Hero() {
         }}
       >
         <span style={{ fontWeight: 300, color: "var(--text-secondary)" }}>
-          Hi, my name is
+          {t.hero.greeting}
         </span>
         <br />
         <span style={{ fontWeight: 900, color: "var(--text-primary)" }}>
@@ -244,7 +246,7 @@ export default function Hero() {
           animation: "fadeUp 0.7s ease both 0.45s",
         }}
       >
-        I&apos;m{" "}
+        {t.hero.iAm}{" "}
         <span style={{ color: "var(--accent)", fontWeight: 700 }}>{typed}</span>
         <span
           style={{
@@ -270,7 +272,7 @@ export default function Hero() {
           animation: "fadeUp 0.6s ease both 0.6s",
         }}
       >
-        Software Developer · Systems Engineer · Buenos Aires, AR
+        {t.hero.location}
       </div>
 
       {/* <p style={{ fontSize: 16, color: "var(--text-secondary)", lineHeight: 1.75, maxWidth: 520, fontWeight: 300, marginBottom: 36 }}>
