@@ -5,10 +5,10 @@ const translations = {
   en: {
     nav: {
       links: [
-        { label: "about",    href: "#about" },
+        { label: "about", href: "#about" },
         { label: "projects", href: "#projects" },
-        { label: "fiverr",   href: "#fiverr" },
-        { label: "contact",  href: "#contact" },
+        { label: "fiverr", href: "#fiverr" },
+        { label: "contact", href: "#contact" },
       ],
       cta: "Hire me",
       darkMode: "Dark mode",
@@ -18,7 +18,12 @@ const translations = {
     hero: {
       tag: "// available for freelance",
       greeting: "Hi, my name is",
-      typeWords: ["Agustín.", "a developer.", "a problem solver.", "based in Buenos Aires."],
+      typeWords: [
+        "Agustín.",
+        "a developer.",
+        "a problem solver.",
+        "based in Buenos Aires.",
+      ],
       iAm: "I'm",
       location: "Software Developer · Systems Engineer · Buenos Aires, AR",
     },
@@ -80,8 +85,9 @@ const translations = {
     },
     contact: {
       tag: "// contact",
-      heading: "Let's build something.",
-      subtext: "Prefer reaching out directly? Pick whichever works best for you.",
+      heading: "Let's build something unique.",
+      subtext:
+        "Prefer reaching out directly? Pick whichever works best for you.",
       nameLbl: "Name",
       namePh: "Your name",
       emailLbl: "Email",
@@ -98,10 +104,10 @@ const translations = {
   es: {
     nav: {
       links: [
-        { label: "sobre mí",   href: "#about" },
-        { label: "proyectos",  href: "#projects" },
-        { label: "fiverr",     href: "#fiverr" },
-        { label: "contacto",   href: "#contact" },
+        { label: "sobre mí", href: "#about" },
+        { label: "proyectos", href: "#projects" },
+        { label: "fiverr", href: "#fiverr" },
+        { label: "contacto", href: "#contact" },
       ],
       cta: "Contratame",
       darkMode: "Modo oscuro",
@@ -111,9 +117,15 @@ const translations = {
     hero: {
       tag: "// disponible para freelance",
       greeting: "Hola, mi nombre es",
-      typeWords: ["Agustín.", "desarrollador.", "solucionador.", "de Buenos Aires."],
+      typeWords: [
+        "Agustín.",
+        "desarrollador.",
+        "solucionador.",
+        "de Buenos Aires.",
+      ],
       iAm: "Soy",
-      location: "Desarrollador de Software · Ingeniero en Sistemas · Buenos Aires, AR",
+      location:
+        "Desarrollador de Software · Ingeniero en Sistemas · Buenos Aires, AR",
     },
     about: {
       tag: "// sobre mí",
@@ -173,8 +185,9 @@ const translations = {
     },
     contact: {
       tag: "// contacto",
-      heading: "Construyamos algo.",
-      subtext: "¿Preferís contactar directamente? Elegí lo que más te convenga.",
+      heading: "Construyamos algo único.",
+      subtext:
+        "¿Preferís contactar directamente? Elegí lo que más te convenga.",
       nameLbl: "Nombre",
       namePh: "Tu nombre",
       emailLbl: "Email",
@@ -220,7 +233,9 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, t: translations[lang], toggleLang }}>
+    <LanguageContext.Provider
+      value={{ lang, t: translations[lang], toggleLang }}
+    >
       {children}
     </LanguageContext.Provider>
   );
